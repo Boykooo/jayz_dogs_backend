@@ -4,6 +4,7 @@ import jayzdogs.dto.CuratorDto;
 import jayzdogs.service.CuratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import java.util.List;
  * @date 17.01.19
  */
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/curator")
 public class CuratorResource {
@@ -41,8 +43,8 @@ public class CuratorResource {
 
     @PostMapping
     public ResponseEntity create(@RequestBody CuratorDto curatorDto) {
-        curatorService.createOrUpdate(curatorDto);
-        return ResponseEntity.ok().build();
+        CuratorDto curator = curatorService.createOrUpdate(curatorDto);
+        return ResponseEntity.ok(curator);
     }
 
     @PutMapping

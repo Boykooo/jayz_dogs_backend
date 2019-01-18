@@ -24,9 +24,10 @@ public class CuratorService {
     @Autowired
     private CuratorRepository curatorRepository;
 
-    public void createOrUpdate(CuratorDto dto) {
+    public CuratorDto createOrUpdate(CuratorDto dto) {
         Curator curator = CuratorConverter.toModel(dto);
-        curatorRepository.save(curator);
+        curator = curatorRepository.save(curator);
+        return CuratorConverter.toDto(curator, 0);
     }
 
     public List<CuratorDto> getAll(int page, int size) {
