@@ -2,6 +2,7 @@ package jayzdogs.resource;
 
 import jayzdogs.dto.DogDto;
 import jayzdogs.dto.NewDogDto;
+import jayzdogs.dto.PageableResponse;
 import jayzdogs.exception.DogLimitException;
 import jayzdogs.service.DogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,10 @@ public class DogResource {
     @GetMapping("/{id}/dog")
     public ResponseEntity get(@PathVariable("id") Long curatorId,
                               @RequestParam("page") int page,
-                              @RequestParam("size") int size) {
-        List<DogDto> all = dogService.getAll(curatorId, page, size);
+                              @RequestParam("size") int size,
+                              @RequestParam(value = "sortField", required = false) String sortField,
+                              @RequestParam(value = "sortDirection", required = false) String sortDirection) {
+        PageableResponse all = dogService.getAll(curatorId, page, size, sortField, sortDirection);
         return ResponseEntity.ok(all);
     }
 
@@ -46,7 +49,7 @@ public class DogResource {
     }
 
     @PutMapping("/dog")
-    public ResponseEntity update(@RequestBody @Valid DogDto dogDto) {
+    public ResponseEntity update(@RequestBody @Valid NewDogDto dogDto) {
         DogDto update = dogService.update(dogDto);
         return ResponseEntity.ok(update);
     }

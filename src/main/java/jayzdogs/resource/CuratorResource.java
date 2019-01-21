@@ -1,6 +1,7 @@
 package jayzdogs.resource;
 
 import jayzdogs.dto.CuratorDto;
+import jayzdogs.dto.PageableResponse;
 import jayzdogs.service.CuratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,11 @@ public class CuratorResource {
     private CuratorService curatorService;
 
     @GetMapping
-    public ResponseEntity getAll(@RequestParam("page") int page, @RequestParam("size") int size) {
-        List<CuratorDto> curators = curatorService.getAll(page, size);
+    public ResponseEntity getAll(@RequestParam("page") int page,
+                                 @RequestParam("size") int size,
+                                 @RequestParam(value = "sortField", required = false) String sortField,
+                                 @RequestParam(value = "sortDirection", required = false) String sortDirection) {
+        PageableResponse curators = curatorService.getAll(page, size, sortField, sortDirection);
         return ResponseEntity.ok(curators);
     }
 
@@ -55,6 +59,7 @@ public class CuratorResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
+        curatorService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

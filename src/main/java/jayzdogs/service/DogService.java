@@ -3,13 +3,16 @@ package jayzdogs.service;
 import jayzdogs.dto.CuratorWithDogsCount;
 import jayzdogs.dto.DogDto;
 import jayzdogs.dto.NewDogDto;
+import jayzdogs.dto.PageableResponse;
 import jayzdogs.dto.converter.DogConverter;
 import jayzdogs.entity.Curator;
 import jayzdogs.entity.Dog;
 import jayzdogs.exception.DogLimitException;
 import jayzdogs.repository.DogRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +32,14 @@ public class DogService {
     @Autowired
     private CuratorService curatorService;
 
-    public List<DogDto> getAll(Long curatorId, int page, int size) {
-        List<Dog> dogs = dogRepository.findAllByCurator(new Curator(curatorId), PageRequest.of(page, size));
-        return dogs.stream().map(DogConverter::toDto).collect(Collectors.toList());
+    public PageableResponse getAll(Long curatorId, int page, int size, String sortField, String sortDirection) {
+        Sort sort = Strings.isNotEmpty(sortField) && Strings.isNotEmpty(sortDirection)
+                ? Sort.by(Sort.Direction.fromString(sortDirection), sortField)
+                : Sort.unsorted();
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        List<Dog> all = dogRepository.findAllByCurator(new Curator(curatorId), pageRequest);
+        List<DogDto> dogs = all.stream().map(DogConverter::toDto).collect(Collectors.toList());
+        return new PageableResponse(dogs, dogRepository.count());
     }
 
     public DogDto create(NewDogDto newDogDto) throws DogLimitException {
@@ -44,8 +52,9 @@ public class DogService {
         return DogConverter.toDto(dog);
     }
 
-    public DogDto update(DogDto dogDto) {
+    public DogDto update(NewDogDto dogDto) {
         Dog dog = DogConverter.toModel(dogDto);
+        dog.setCurator(new Curator(dogDto.getCuratorId()));
         dog = dogRepository.save(dog);
         return DogConverter.toDto(dog);
     }

@@ -8,6 +8,7 @@ create table curator (
 create table dog (
   id serial primary key,
   sex varchar(10) not null,
+  name varchar(100) not null,
   age integer not null,
   breed varchar(150),
   curator_id bigint not null,

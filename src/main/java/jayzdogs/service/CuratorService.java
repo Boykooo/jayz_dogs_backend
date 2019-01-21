@@ -1,12 +1,15 @@
 package jayzdogs.service;
 
 import jayzdogs.dto.CuratorDto;
+import jayzdogs.dto.CuratorWithDogsCount;
+import jayzdogs.dto.PageableResponse;
 import jayzdogs.dto.converter.CuratorConverter;
 import jayzdogs.entity.Curator;
-import jayzdogs.dto.CuratorWithDogsCount;
 import jayzdogs.repository.CuratorRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +33,14 @@ public class CuratorService {
         return CuratorConverter.toDto(curator, 0);
     }
 
-    public List<CuratorDto> getAll(int page, int size) {
-        List<CuratorWithDogsCount> all = curatorRepository.getAllWithDogsCount(PageRequest.of(page, size));
-        return all.stream().map(CuratorConverter::toDto).collect(Collectors.toList());
+    public PageableResponse getAll(int page, int size, String sortField, String sortDirection) {
+        Sort sort = Strings.isNotEmpty(sortField) && Strings.isNotEmpty(sortDirection)
+                ? Sort.by(Sort.Direction.fromString(sortDirection), sortField)
+                : Sort.unsorted();
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        List<CuratorWithDogsCount> all = curatorRepository.getAllWithDogsCount(pageRequest);
+        List<CuratorDto> curators = all.stream().map(CuratorConverter::toDto).collect(Collectors.toList());
+        return new PageableResponse(curators, curatorRepository.count());
     }
 
     public Curator getById(Long id) {
@@ -42,6 +50,10 @@ public class CuratorService {
 
     public CuratorWithDogsCount getByIdWithDogsCount(Long curatorId) {
         return curatorRepository.getByIdWithDogsCount(curatorId);
+    }
+
+    public void delete(Long id) {
+        this.curatorRepository.deleteById(id);
     }
 
 }
