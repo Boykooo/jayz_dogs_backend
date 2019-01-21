@@ -39,7 +39,7 @@ public class DogService {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
         List<Dog> all = dogRepository.findAllByCurator(new Curator(curatorId), pageRequest);
         List<DogDto> dogs = all.stream().map(DogConverter::toDto).collect(Collectors.toList());
-        return new PageableResponse(dogs, dogRepository.count());
+        return new PageableResponse(dogs, dogRepository.countByCurator(new Curator(curatorId)));
     }
 
     public DogDto create(NewDogDto newDogDto) throws DogLimitException {

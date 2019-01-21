@@ -18,4 +18,6 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
 
     List<Dog> findAllByCurator(Curator curator, Pageable pageable);
 
+    long countByCurator(Curator curator);
+
 }
