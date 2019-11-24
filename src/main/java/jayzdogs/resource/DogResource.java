@@ -42,6 +42,12 @@ public class DogResource {
         return ResponseEntity.ok(all);
     }
 
+    @GetMapping("/dog/{id}")
+    public ResponseEntity getById(@PathVariable("id") Long id) {
+        DogDto dog = dogService.getById(id);
+        return ResponseEntity.ok(dog);
+    }
+
     @PostMapping("/dog")
     public ResponseEntity create(@RequestBody @Valid NewDogDto newDogDto) throws DogLimitException {
         DogDto dog = dogService.create(newDogDto);

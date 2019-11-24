@@ -13,6 +13,9 @@ import jayzdogs.entity.Dog;
 public final class DogConverter {
 
     public static DogDto toDto(Dog dog) {
+        if (dog == null) {
+            return null;
+        }
         return DogDto.builder()
                 .id(dog.getId())
                 .name(dog.getName())

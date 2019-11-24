@@ -42,6 +42,11 @@ public class DogService {
         return new PageableResponse(dogs, dogRepository.countByCurator(new Curator(curatorId)));
     }
 
+    public DogDto getById(Long id) {
+        Dog dog = dogRepository.findById(id).orElse(null);
+        return DogConverter.toDto(dog);
+    }
+
     public DogDto create(NewDogDto newDogDto) throws DogLimitException {
         CuratorWithDogsCount curator = curatorService.getByIdWithDogsCount(newDogDto.getCuratorId());
         if (curator == null || !curator.canTakeDog()) {
