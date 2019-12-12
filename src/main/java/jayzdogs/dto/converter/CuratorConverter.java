@@ -17,6 +17,7 @@ public final class CuratorConverter {
                 .name(dto.getName())
                 .phoneNumber(dto.getPhoneNumber())
                 .dogsLimit(dto.getDogsLimit())
+                .lastname(dto.getLastname())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public final class CuratorConverter {
         return CuratorDto.builder()
                 .id(curator.getId())
                 .name(curator.getName())
+                .lastname(curator.getLastname())
                 .phoneNumber(curator.getPhoneNumber())
                 .dogsLimit(curator.getDogsLimit())
                 .dogsCount(dogsCount)
@@ -36,6 +38,7 @@ public final class CuratorConverter {
         return CuratorDto.builder()
                 .id(curator.getId())
                 .name(curator.getName())
+                .lastname(curator.getLastname())
                 .phoneNumber(curator.getPhoneNumber())
                 .dogsLimit(curator.getDogsLimit())
                 .dogsCount(dogsCount)

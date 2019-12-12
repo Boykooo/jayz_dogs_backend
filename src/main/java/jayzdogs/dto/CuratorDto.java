@@ -14,6 +14,7 @@ public class CuratorDto {
 
     private Long id;
     private String name;
+    private String lastname;
     private String phoneNumber;
     private int dogsLimit;
     private int dogsCount;

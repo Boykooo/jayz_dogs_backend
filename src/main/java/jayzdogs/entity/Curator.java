@@ -34,6 +34,9 @@ public class Curator {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "lastname")
+    private String lastname;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
